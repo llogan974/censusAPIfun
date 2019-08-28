@@ -1,0 +1,19 @@
+.bodyContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+#querySelectors{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+select {
+    display: flex;
+    flex-direction: column;
+    /* width: 50%; */
+}
+select > * {
+    width:
+}

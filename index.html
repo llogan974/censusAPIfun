@@ -3,38 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Census Fun</title>
 </head>
 <body>
-<form id="querySelectors" action="">
-        <label for="state">Pick a state</label>
+<div class="bodyContainer">
 
-    <select name="states" id="stateDropdown">
+        <form id="querySelectors" action="">
+            <label for="state">Pick a state</label>
 
-    </select>
-    <select name="county" id="countyDropdown">
+            <select name="states" id="stateDropdown">
+            </select>
+            <label for="count">Pick a County</label>
+            <select name="county" id="countyDropdown">
 
-    </select>
-    <select name="groups" id="groupDropdown">
+            </select>
+            <label for="tags">Pick a tag</label>
+            <select name="tags" id="tagDropdown">
 
-    </select>
-    <select name="variable" id="variableDropdown">
 
-    </select>
-</form>
+            </select>
+        </form>
 
-Results:
-<div class="county">
+    <div class="results">
+        Results:
+        <div class="county">
 
-</div>
-How does your state compare?
-<div class="state">
+        </div>
+        How does your state compare?
+        <div class="state">
 
-</div>
-How does your county compare with the United States?
-<div class="country">
+        </div>
+        How does your county compare with the United States?
+        <div class="country">
 
+        </div>
+    </div>
 </div>
 
 

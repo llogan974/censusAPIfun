@@ -7,6 +7,6 @@ This app can help answer those questions.
 To do:
 
 Reformat.
-Get Geographies
-Then Tags
-Then Variables
+Get geographies
+get tags
+show 20 cards with random info from those tags
