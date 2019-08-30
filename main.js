@@ -30,18 +30,20 @@ const res = fetch(
     for (state of res) {
       stateSelector.innerHTML += `<option value="${state[1]}">${
         state[0]
-      }</option>`;
+        }</option>`;
     }
   });
 
 /* eslint-disable */
-tagSelector.addEventListener("change", () => {
-  queryValue = tagSelector.value;
-  getTags(queryValue);
-  // return queryValue;
-});
+// countySelector.addEventListener("change", () => {
+//   queryValue = tagSelector.value;
+//   getTags(queryValue);
+//   // return queryValue;
+// });
 
 stateSelector.addEventListener("change", getCounties);
+
+countySelector.addEventListener("change", getTags);
 
 // get counties
 function getCounties() {
@@ -55,68 +57,87 @@ function getCounties() {
       for (const county of counties) {
         countySelector.innerHTML += `<option value=${county[3]}>${
           county[0]
-        } </option>}`;
+          } </option>}`;
       }
     });
 }
 
-// get tags
-const tags = fetch(
-  `https://api.census.gov/data/2017/acs/acs1/subject/tags.json`
-).then(tags =>
-  tags.json().then(tags => {
-    for (items of tags.tags) {
-      tagSelector.innerHTML += `<option value = ${items}>${items}</option>`;
-    }
-  })
-);
+// On page load, get keys and values of 20 random items
+let randValues = [];
+let censusItems = [];
 
-var rand = "";
-// On change of tags, run this finction
 function getTags() {
-  const tagValue = tagSelector.value;
-  let myArray = [];
   const tagVars = fetch(`
-  https://api.census.gov/data/2017/acs/acs1/subject/tags/${tagValue}.json
+  https://api.census.gov/data/2017/acs/acs1/subject/variables.json
   `).then(tagVars =>
     tagVars.json().then(tagVars => {
-      var array2 = myArray.concat(tagVars.items[0].variables);
-      getRand(array2);
-    })
+
+      let allValues = Object.entries(tagVars.variables);
+      let allKeys = Object.keys(tagVars.variables);
+
+
+      // Create an array and push items to end of the array
+      for (var i = 0; i < 20; i++) {
+        randValues.push(allKeys[Math.floor(Math.random() * allKeys.length)]);
+      }
+      for (var values of randValues) {
+        censusItems.push(allValues.filter(value => value[0] === values));
+      }
+      mainQuery(censusItems);
+    }
+    )
   );
 }
+getTags();
 
-function getRand(arr) {
-  for (var i = 0; i < 20; i++) {
-    let randItems = arr[Math.floor(Math.random() * arr.length)];
-    console.log(randItems);
+
+function mainQuery(randVars) {
+  let queryVars = "";
+  for (var censusKeys of randVars) {
+    queryVars += "," + censusKeys[0][0]
   }
+  const county = fetch(`
+  https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=county:081&in=state:37&key=${key}`).then(
+    county =>
+      county.json().then(county => {
+        // County will have all county info
+        // ItemName hase the value
+        for (const [i, itemName] of randVars.entries()) {
+          countyDiv.innerHTML += `${itemName[0][1].label}</br>
+          ${county[1][i + 1]} </br>
+          `;
+          // console.log(itemName[0][1].label, county[1][i + 1]);
+        }
+      })
+  );
+  // const county = fetch(`
+  //   https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${rand}&for=county:${countySelector.value}&in=state:${stateSelector.value}&key=${key}`).then(
+  //   county =>
+  //     county.json().then(county => {
+  //       console.table(county);
+  //     })
+  // );
 }
-// function mainQuery() {
-//   const county = fetch(
-//     `https://api.census.gov/data/2017/acs/acs1/profile?get=NAME,${variableSelector.value}&for=county:${countySelector.value}&in=state:${stateSelector.value}&key=${key}`
-//   );
-//   const state = fetch(
-//     `https://api.census.gov/data/2017/acs/acs1/profile?get=NAME,${variableSelector.value}&for=state:${stateSelector.value}&key=${key}`
-//   );
+// https://api.census.gov/data/2017/acs/acs1/subject?get=NAME,S0101_C01_001E&for=county:013&in=state:04&key=YOUR_KEY_GOES_HERE
+// const state = fetch(
+//   `https://api.census.gov/data/2017/acs/acs1/profile?get=NAME,${variableSelector.value}&for=state:${stateSelector.value}&key=${key}`
+// );
+// const country = fetch(
+//   `https://api.census.gov/data/2017/acs/acs1/profile?get=NAME,${variableSelector.value}&for=us:1&key=${key}`
+// );
+// Promise.all([county, state, country])
+// Transform promise with .then, which is unformatted
+// .then(
+//   responses => {
+//     return Promise.all(responses.map(res => res.json()));
+//   }
+// Call it in json, which will return a promise
+// answer.json()
+// )
+// .then(responses => {
+//   console.log(responses);
+//   countyDiv.innerHTML += `Value: ${responses[0][1][1]}`;
+//   stateDiv.innerHTML += `Value: ${responses[1][1][1]}`;
+//   countryDiv.innerHTML += `Value: ${responses[2][1][1]}`;
+// });
 
-//   const country = fetch(
-//     `https://api.census.gov/data/2017/acs/acs1/profile?get=NAME,${variableSelector.value}&for=us:1&key=${key}`
-//   );
-
-//   Promise.all([county, state, country])
-//     // Transform promise with .then, which is unformatted
-//     .then(
-//       responses => {
-//         return Promise.all(responses.map(res => res.json()));
-//       }
-//       // Call it in json, which will return a promise
-//       // answer.json()
-//     )
-//     .then(responses => {
-//       console.log(responses);
-//       countyDiv.innerHTML += `Value: ${responses[0][1][1]}`;
-//       stateDiv.innerHTML += `Value: ${responses[1][1][1]}`;
-//       countryDiv.innerHTML += `Value: ${responses[2][1][1]}`;
-//     });
-// }

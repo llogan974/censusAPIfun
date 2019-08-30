@@ -7,6 +7,9 @@ This app can help answer those questions.
 To do:
 
 Reformat.
-Get geographies
-get tags
-show 20 cards with random info from those tags
+Get Geographies
+
+Get Keys
+Get 10 random keys
+Map through Object, and get the Object for each key
+Get the Object associated with that
