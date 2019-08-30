@@ -17,3 +17,13 @@ select {
 select > * {
     width:
 }
+
+.gridContainer{
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 20px;
+}
+.grid-item {
+    border: 2px lightcoral;
+}
