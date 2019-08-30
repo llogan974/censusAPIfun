@@ -25,5 +25,5 @@ select > * {
     grid-gap: 20px;
 }
 .gridItem {
-    border: 2px lightcoral;
+    border: 2px solid lightcoral;
 }
