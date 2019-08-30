@@ -73,7 +73,7 @@ function getTags() {
 
 
       // Create an array and push items to end of the array
-      for (var i = 0; i < 10; i++) {
+      for (var i = 0; i < 20; i++) {
         randValues.push(allKeys[Math.floor(Math.random() * allKeys.length)]);
       }
       for (var values of randValues) {
@@ -105,19 +105,21 @@ function mainQuery(randVars) {
     .then(
       responses => {
         return Promise.all(responses.map(res => res.json()))
-      }
-      // Call it in json, which will return a promise
-      // answer.json()
-    )
+      })
+
+
+
+
     .then(res => {
-      // County will have all county info
-      // ItemName hase the value
+
       for (const [i, itemName] of randVars.entries()) {
-        console.log(res, itemName);
-        // gridSelector.innerHTML += `<div class="gridItem">County: ${itemName[0][1].label}</br>
-        //   ${entries[1][i + 1]} </br>
-        //   </div>
-        //       `
+
+        gridSelector.innerHTML += `<div class="gridItem"> Property: ${itemName[0][1].label}</br>
+        County: ${res[0][1][i + 1]} </br>
+        State:${res[1][1][i + 1]} </br>
+        Country: ${res[2][1][i + 1]}
+          </div>
+              `
       }
     });
 }
