@@ -17,34 +17,39 @@ const key = '80b3fa4b725c86f64a742f9bc799b2cb861e1644';
 /* eslint-enable */
 
 // Get the states
-const res = fetch(
-  `https://api.census.gov/data/2017/acs/acs1/subject?get=NAME&for=state:*&key=${key}`
-)
-  // Transform promise with .then, which is unformatted
-  .then(res =>
-    // Call it in json, which will return a promise
-    res.json()
+
+async function getStates() {
+
+  const res = await fetch(
+    `https://api.census.gov/data/2017/acs/acs1/subject?get=NAME&for=state:*&key=${key}`
   )
-  .then(res => {
-    stateSelector.innerHTML = '';
+    // Transform promise with .then, which is unformatted
+    .then(res =>
+      // Call it in json, which will return a promise
+      res.json()
+    )
+    .then(res => {
+      stateSelector.innerHTML = '';
 
-    for (state of res) {
-      stateSelector.innerHTML += `<option value="${state[1]}">${
-        state[0]
-        }</option>`;
-    }
-  });
+      for (state of res) {
+        stateSelector.innerHTML += `<option value="${state[1]}">${
+          state[0]
+          }</option>`;
+      }
+    });
 
 
+  stateSelector.addEventListener("change", getCounties);
 
-stateSelector.addEventListener("change", getCounties);
-
-countySelector.addEventListener("change", getTags);
+  countySelector.addEventListener("change", getTags);
+} //ends async
+getStates();
 
 // get counties
-function getCounties() {
+async function getCounties() {
+
   // https://api.census.gov/data/2017/acs/acs1?get=NAME,B00001_001E&for=county:020&in=state:02&key=YOUR_KEY_GOES_HERE
-  const counties = fetch(
+  const counties = await fetch(
     `https://api.census.gov/data/2017/acs/acs1?get=NAME,B01001_001E&for=county:*&in=state:${stateSelector.value}&key=${key}`
   )
     .then(counties => counties.json())
@@ -62,7 +67,7 @@ function getCounties() {
 let randValues = [];
 let censusItems = [];
 
-function getTags() {
+async function getTags() {
   const tagVars = fetch(`
   https://api.census.gov/data/2017/acs/acs1/subject/variables.json
   `).then(tagVars =>
@@ -86,7 +91,7 @@ function getTags() {
 }
 
 
-function mainQuery(randVars) {
+async function mainQuery(randVars) {
   let queryVars = "";
   for (var censusKeys of randVars) {
     queryVars += "," + censusKeys[0][0]
