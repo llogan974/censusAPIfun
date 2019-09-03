@@ -295,40 +295,47 @@ async function getTags() {
 }
 
 
-async function mainQuery(randVars) {
+function mainQuery(randVars) {
   let queryVars = "";
   for (var censusKeys of randVars) {
     queryVars += "," + censusKeys[0][0]
   }
-  const county = fetch(`
-    https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=county:${countySelector.value}&in=state:${stateSelector.value}&key=${key}`);
 
+  setTimeout(getVariables(), 300);
+  function getVariables() {
+    console.log('getting variables');
+    const county = fetch(`
+      https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=county:${countySelector.value}&in=state:${stateSelector.value}&key=${key}`);
 
-  const state = fetch(
-    `https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=state:${stateSelector.value}&key=${key}`
-  );
+    const state = fetch(
+      `https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=state:${stateSelector.value}&key=${key}`
+    );
+    const country = fetch(
+      `https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=us:1&key=${key}`
+    );
 
+    Promise.all([county, state, country])
+      // Transform promise with .then, which is unformatted
+      .then(
+        responses => {
+          return Promise.all(responses.map(res => res.json()))
+        })
 
-  const country = fetch(
-    `https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=us:1&key=${key}`
-  );
-
-  const res = await Promise.all([county, state, country]);
-  // Transform promise with .then, which is unformatted
-  const dataPromises = res.map(r => r.json());
-  var itemName = await Promise.all(dataPromises);
-
-
-  for ([i, itemName] of randVars.entries()) {
-
-    gridSelector.innerHTML += `<div class="gridItem"> Property: ${itemName[0][1].label}</br>
-        County: ${res[0][1][i + 1]} </br>
-        State:${res[1][1][i + 1]} </br>
-        Country: ${res[2][1][i + 1]}
-          </div>
-              `
-
+      .then(res => {
+        for (const [i, itemName] of randVars.entries()) {
+          gridSelector.innerHTML += `<div class="gridItem"> Property: ${itemName[0][1].label}</br>
+          County: ${res[0][1][i + 1]} </br>
+          State:${res[1][1][i + 1]} </br>
+          Country: ${res[2][1][i + 1]}
+            </div>
+                `
+        }
+      });
   }
 
+
+
+
 }
+
 
