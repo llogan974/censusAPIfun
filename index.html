@@ -9,32 +9,34 @@
 </head>
 <body>
 <div class="bodyContainer">
-
+    <p>
+        Select a state and county to see 15 random facts from the U.S. Census.
+    </p>
+    <p>
+        See how the county you select compares with State and National Numbers.
+    </p>
+    <p>
+        Refresh the page to see 15 more random facts.
+    </p>
+    <h3>
+        This is a beta release!
+    </h3>
+    <p>
+        Wait until the first selector says "NAME". If it does not say name, refresh the page. Due to the instability of the Census API, you may need to refresh 3 times or so.
+    </p>
         <form id="querySelectors" action="">
-            <label for="state">Pick a state</label>
-
+            <label for="state">Pick a state.</label>
             <select name="states" id="stateDropdown">
             </select>
+            <p>
+                Wait until the word "NAME" appears below. If it does not appear in 3 seconds, refresh the page.
+            </p>
             <label for="count">Pick a County</label>
             <select name="county" id="countyDropdown">
             </select>
 
         </form>
 
-    <div class="results">
-        Results:
-        <div class="county">
-
-        </div>
-        How does your state compare?
-        <div class="state">
-
-        </div>
-        How does your county compare with the United States?
-        <div class="country">
-
-        </div>
-    </div>
 </div>
 <div class="gridContainer">
 
@@ -42,5 +44,6 @@
 
 
 </body>
-<script src="main.js"></script>
+<script src="scripts/main.js"></script>
 </html>
+
