@@ -282,7 +282,7 @@ async function getTags() {
 
 
       // Create an array and push items to end of the array
-      for (var i = 0; i < 10; i++) {
+      for (var i = 0; i < 20; i++) {
         randValues.push(allKeys[Math.floor(Math.random() * allKeys.length)]);
       }
       for (var values of randValues) {
