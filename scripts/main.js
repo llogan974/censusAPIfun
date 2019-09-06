@@ -268,7 +268,7 @@ async function getCounties() {
 }
 
 // On page load, get keys and values of 20 random items
-let randValues = [];
+var randValues;
 let censusItems = [];
 
 async function getTags() {
@@ -277,65 +277,62 @@ async function getTags() {
   `).then(tagVars =>
     tagVars.json().then(tagVars => {
 
-      let allValues = Object.entries(tagVars.variables);
-      let allKeys = Object.keys(tagVars.variables);
+      let allValues = Object.entries(tagVars.variables); //create an array of arrays
+      //create an array of objects
+      var censusValues = allValues.map((val, i) => ({ name: val[1].label, censusKey: val[0], category: val[1].concept, k: i }));
 
-
-      // Create an array and push items to end of the array
+      // get 20 random values
       for (var i = 0; i < 20; i++) {
-        randValues.push(allKeys[Math.floor(Math.random() * allKeys.length)]);
+        censusItems.push(censusValues[Math.floor(Math.random() * censusValues.length)]);
       }
-      for (var values of randValues) {
-        censusItems.push(allValues.filter(value => value[0] === values));
-      }
-      mainQuery(censusItems);
+      // mainQuery(censusItems);
     }
     )
   );
 }
+getTags();
+
+// function mainQuery(randVars) {
+//   let queryVars = "";
+//   for (var censusKeys of randVars) {
+//     queryVars += "," + censusKeys[0][0]
+//   }
+
+//   setTimeout(getVariables(), 300);
+//   function getVariables() {
+//     console.log('getting variables');
+//     const county = fetch(`
+//       https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=county:${countySelector.value}&in=state:${stateSelector.value}&key=${key}`);
+
+//     const state = fetch(
+//       `https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=state:${stateSelector.value}&key=${key}`
+//     );
+//     const country = fetch(
+//       `https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=us:1&key=${key}`
+//     );
+
+//     Promise.all([county, state, country])
+//       // Transform promise with .then, which is unformatted
+//       .then(
+//         responses => {
+//           return Promise.all(responses.map(res => res.json()))
+//         })
+
+//       .then(res => {
+//         for (const [i, itemName] of randVars.entries()) {
+//           gridSelector.innerHTML += `<div class="gridItem"> Property: ${itemName[0][1].label}</br>
+//           County: ${res[0][1][i + 1]} </br>
+//           State:${res[1][1][i + 1]} </br>
+//           Country: ${res[2][1][i + 1]}
+//             </div>
+//                 `
+//         }
+//       });
+//   }
 
 
-function mainQuery(randVars) {
-  let queryVars = "";
-  for (var censusKeys of randVars) {
-    queryVars += "," + censusKeys[0][0]
-  }
-
-  setTimeout(getVariables(), 300);
-  function getVariables() {
-    console.log('getting variables');
-    const county = fetch(`
-      https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=county:${countySelector.value}&in=state:${stateSelector.value}&key=${key}`);
-
-    const state = fetch(
-      `https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=state:${stateSelector.value}&key=${key}`
-    );
-    const country = fetch(
-      `https://api.census.gov/data/2017/acs/acs1/subject?get=NAME${queryVars}&for=us:1&key=${key}`
-    );
-
-    Promise.all([county, state, country])
-      // Transform promise with .then, which is unformatted
-      .then(
-        responses => {
-          return Promise.all(responses.map(res => res.json()))
-        })
-
-      .then(res => {
-        for (const [i, itemName] of randVars.entries()) {
-          gridSelector.innerHTML += `<div class="gridItem"> Property: ${itemName[0][1].label}</br>
-          County: ${res[0][1][i + 1]} </br>
-          State:${res[1][1][i + 1]} </br>
-          Country: ${res[2][1][i + 1]}
-            </div>
-                `
-        }
-      });
-  }
 
 
-
-
-}
+// }
 
 
